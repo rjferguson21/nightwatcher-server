@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nightwatcher-server
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nightwatcher
+        tier: backend
+    spec:
+      containers:
+      - name: nightwatcher-server
+        image: rjferguson21/nightwatcher-server
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        envFrom:
+        - configMapRef:
+            name: nightwatcher-config
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns

@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: nightwatcher-server
+spec:
+  selector:
+    app: nightwatcher
+    tier: backend
+  ports:
+  - name: http
+    protocol: TCP
+    port: 3000

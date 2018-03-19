@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata: 
+  name: nightwatcher-config
+data:
+  nightwatcher_mqtt: 'mqtt://mqtt-master'
+  nightwatcher_rethinkdb: 'rethinkdb-proxy'
+  nightwatcher_rethinkdb_port: '28015'
+  
+  
