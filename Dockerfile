@@ -1,16 +1,17 @@
 FROM node
 
+RUN npm install -g npm
+
 WORKDIR /usr/workroot/
 
+COPY package-lock.json .
 COPY package.json .
 
-RUN npm install
+RUN npm ci
 
 COPY . .
 
 RUN rm -fr kube
-
-RUN npm run build
 
 EXPOSE 3000
 

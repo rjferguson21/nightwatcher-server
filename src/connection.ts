@@ -1,16 +1,19 @@
 import { config } from './config';
-import * as rethinkdbdash from 'rethinkdbdash';
-import * as rethinkdbInit from 'rethinkdb-init';
+import rethinkdbdash from 'rethinkdbdash';
+import rethinkdbInit from 'rethinkdb-init';
 
-let r = rethinkdbdash(config.rethinkdb);
+const r = rethinkdbdash(config.rethinkdb);
 
-rethinkdbInit(r);
- 
-r.init(config.rethinkdb, [
-    {
-      name: 'sensors'
-    }
-  ]
-);
-
-export default r;
+export function initDB(): Promise<any> {
+  rethinkdbInit(r);
+  
+  return r.init(config.rethinkdb, [
+      {
+        name: 'sensors'
+      },
+      {
+        name: 'sensor_history'
+      }
+    ]
+  ).then(() => r);
+}
