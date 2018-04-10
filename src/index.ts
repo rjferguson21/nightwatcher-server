@@ -56,7 +56,9 @@ initDB().then(r => {
     method: 'GET',
     path: '/history',
     handler: function (request, reply) {
-      history.list().then(data => {
+      const start = new Date(request.query.start);
+      const end = new Date(request.query.end);
+      history.list(start, end).then(data => {
         reply(JSON.stringify(data));
       })
     }

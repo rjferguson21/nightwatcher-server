@@ -12,7 +12,8 @@ export function initDB(): Promise<any> {
         name: 'sensors'
       },
       {
-        name: 'sensor_history'
+        name: 'sensor_history',
+        indexes: ['lastUpdated']
       }
     ]
   ).then(() => r);

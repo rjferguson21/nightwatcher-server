@@ -7,10 +7,10 @@ export class HistoryService {
     this.r = r;
   }
 
-  list(): Promise<SensorChangeEvent[]> {
+  list(start: Date, end: Date): Promise<SensorChangeEvent[]> {
     return this.r.table('sensor_history')
+      .between(start, end, {index: 'lastUpdated'})
       .orderBy(this.r.desc('lastUpdated'))
-      .limit(30)
       .run();
   }
 }
