@@ -1,9 +1,10 @@
 import { Sensor, SensorChangeEvent } from '../sensors/sensor';
+import { r } from '../connection';
 
 export class HistoryService {
   r: any;
 
-  constructor(r: any) {
+  constructor() {
     this.r = r;
   }
 

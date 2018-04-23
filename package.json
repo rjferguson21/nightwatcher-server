@@ -7,17 +7,21 @@
     "build": "tsc src/*.ts",
     "clean": "rm src/*.js",
     "start": "nodemon",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@types/hapi": "^16.1.7",
+    "@types/lodash": "^4.14.106",
     "@types/mqtt": "0.0.34",
     "@types/nes": "^6.2.8",
     "@types/winston": "^2.3.8",
     "hapi": "^16.5.0",
+    "lodash": "^4.17.5",
     "mqtt": "^2.9.3",
+    "mqtt-match": "^1.0.3",
     "nes": "^6.4.3",
     "rethinkdb-init": "^0.2.2",
     "rethinkdbdash": "^2.3.30",
@@ -25,6 +29,7 @@
     "winston": "^2.4.1"
   },
   "devDependencies": {
+    "jest": "^22.4.3",
     "nodemon": "^1.11.0",
     "ts-node": "^5.0.1"
   }

@@ -1,11 +1,12 @@
 import { Sensor, SensorChangeEvent } from './sensor';
 import winston from 'winston';
+import { r } from '../connection';
 winston.level = 'debug';
 
 export class SensorService {
   r: any;
 
-  constructor(r: any) {
+  constructor() {
     this.r = r;
   }
 

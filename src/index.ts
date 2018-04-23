@@ -6,13 +6,15 @@ import * as mqtt from 'mqtt';
 import { config } from './config';
 import { initDB } from './connection';
 import { Sensor } from './sensors/sensor';
+import { MqttSubscriptions } from './subscriptions/subscription';
+import winston from 'winston';
 
 const server = new Hapi.Server();
 server.connection({ port: 3000, host: '0.0.0.0' });
 
 initDB().then(r => {
-  const sensors = new SensorService(r);
-  const history = new HistoryService(r);
+  const sensors = new SensorService();
+  const history = new HistoryService();
 
   server.route({
     method: 'GET',
@@ -69,29 +71,10 @@ initDB().then(r => {
       if (err) {
         throw err;
       }
-      console.log(`Server running at: ${server.info.uri}`);
+      winston.info(`Server running at: ${server.info.uri}`);
       
-      let client = mqtt.connect(config.mqtt);
-
-      client.on('connect', function () {
-        console.log('connected to mqtt');
-        client.subscribe('envisalink/#');
-      });
-
-      client.on('message', (topic, message) => {
-        console.log(topic, message);
-        let id = topic.split('/')[1]
-        let data = { 
-          id, 
-          status: message.toString(),
-          lastUpdated: new Date()
-        };
-
-        sensors.update(data as Sensor);
-        
-        console.log('broadcast');
-        server.broadcast(data);
-      });
+      const mqttSubs = new MqttSubscriptions();
+      mqttSubs.connect({ server });
     });
   });
 });
