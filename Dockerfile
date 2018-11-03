@@ -4,7 +4,7 @@ RUN npm install -g npm
 
 WORKDIR /usr/workroot/
 
-COPY package-*.json .
+COPY package*.json ./
 
 RUN npm ci
 
