@@ -76,6 +76,7 @@ initDB().then(r => {
       client.on('connect', function () {
         console.log('connected to mqtt');
         client.subscribe('envisalink/#');
+        client.subscribe('nightwatcher/#');
       });
 
       client.on('message', (topic, message) => {
