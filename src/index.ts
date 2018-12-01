@@ -4,8 +4,9 @@ import * as Hapi from 'hapi';
 import * as Nes from 'nes';
 import * as mqtt from 'mqtt';
 import { config } from './config';
-import { initDB } from './connection';
+import { initDB, getMQTTConnection } from './connection';
 import { Sensor } from './sensors/sensor';
+import { connect } from 'mqtt';
 
 const server = new Hapi.Server();
 server.connection({ port: 3000, host: '0.0.0.0' });
@@ -53,6 +54,17 @@ initDB().then(r => {
   });
 
   server.route({
+    method: 'PUT',
+    path: '/sensors/{id}',
+    handler: function (request, reply) {
+      getMQTTConnection().then((mqttConn) => {
+        mqttConn.publish(`nightwatcher/${request.params.id}/set`, request.payload.value)
+        reply(JSON.stringify({ id: request.params.id, value: request.payload.value }));
+      });
+    }
+  });
+
+  server.route({
     method: 'GET',
     path: '/history',
     handler: function (request, reply) {
@@ -71,28 +83,26 @@ initDB().then(r => {
       }
       console.log(`Server running at: ${server.info.uri}`);
       
-      let client = mqtt.connect(config.mqtt);
-
-      client.on('connect', function () {
+      getMQTTConnection().then((mqttConn) => {
         console.log('connected to mqtt');
-        client.subscribe('envisalink/#');
-        client.subscribe('nightwatcher/#');
-      });
+        mqttConn.subscribe('envisalink/#');
+        mqttConn.subscribe('nightwatcher/#');
 
-      client.on('message', (topic, message) => {
-        console.log(topic, message);
-        let id = topic.split('/')[1]
-        let data = { 
-          id, 
-          status: message.toString(),
-          lastUpdated: new Date()
-        };
+        mqttConn.on('message', (topic, message) => {
+          console.log(topic, message);
+          let id = topic.split('/')[1]
+          let data = { 
+            id, 
+            status: message.toString(),
+            lastUpdated: new Date()
+          };
 
-        sensors.update(data as Sensor);
-        
-        console.log('broadcast');
-        server.broadcast(data);
+          sensors.update(data as Sensor);
+          
+          console.log('broadcast');
+          server.broadcast(data);
+        });
       });
     });
   });
-});
+}); 
