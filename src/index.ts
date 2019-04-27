@@ -87,6 +87,7 @@ initDB().then(r => {
         console.log('connected to mqtt');
         mqttConn.subscribe('envisalink/#');
         mqttConn.subscribe('nightwatcher/#');
+        mqttConn.subscribe('tplink/#');
 
         mqttConn.on('message', (topic, message) => {
           console.log(topic, message);
